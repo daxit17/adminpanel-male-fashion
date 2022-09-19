@@ -1,0 +1,42 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Table",
+      "price": 12000,
+      "quantity": 1200,
+      "warrenty": 1
+    },
+    {
+      "id": 2,
+      "name": "Table",
+      "price": 12000,
+      "quantity": 1200,
+      "warrenty": 1
+    },
+    {
+      "id": 481,
+      "name": "Daxit",
+      "price": "20",
+      "quantity": "222",
+      "warrenty": "1"
+    },
+    {
+      "id": 5,
+      "name": "daxit bhatt",
+      "price": "20",
+      "quantity": "222",
+      "warrenty": "1"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
