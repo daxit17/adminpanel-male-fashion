@@ -10,11 +10,18 @@ import * as yup from 'yup';
 import { Form, Formik, useFormik } from 'formik';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from "react-redux";
-import { AddCategory, GetCategory } from '../Redux/Actions/Category_Actions';
+import { AddCategory, DeleteCategory, GetCategory, UpdateCategory } from '../Redux/Actions/Category_Actions';
 import { useEffect } from "react";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Slide from '@mui/material/Slide';
+import { useState } from "react"
 
 export default function Category() {
     const [open, setOpen] = React.useState(false);
+    const [did, setDid] = useState(0);
+    const [update, setUpdate] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -22,16 +29,64 @@ export default function Category() {
 
     const handleClose = () => {
         setOpen(false);
+        formik.resetForm();
     };
 
     let dispatch = useDispatch();
 
     const category = useSelector(state => state.category);
 
+    const [dopen, setdOpen] = React.useState(false);
+
+    const Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="up" ref={ref} {...props} />;
+    });
+
+    const handledClickOpen = () => {
+        setdOpen(true);
+    };
+
+    const handledClose = () => {
+        setdOpen(false);
+        formik.resetForm();
+        setUpdate(false);
+    };
+
     // handleInsert
 
     const handleInsert = (values) => {
+
         dispatch(AddCategory(values));
+
+        handleClose();
+    }
+
+    // handleDelete
+
+    const handleDelete = (params) => {
+
+        dispatch(DeleteCategory(did));
+
+        handledClose();
+    }
+
+    // handleEdit
+
+    const handleEdit = (params) => {
+
+        handleClickOpen();
+
+        setUpdate(true);
+
+        formik.setValues(params.row)
+    }
+
+    const handleUpdate = (values) => {
+
+        dispatch(UpdateCategory(values));
+
+        handleClose();
+
     }
 
     // Schema
@@ -50,7 +105,11 @@ export default function Category() {
         },
         validationSchema: schema,
         onSubmit: values => {
-            handleInsert(values);
+            if (update) {
+                handleUpdate(values);
+            } else {
+                handleInsert(values);
+            }
         },
     });
 
@@ -67,7 +126,23 @@ export default function Category() {
             renderCell: (params) => (
                 <img src={params.row.profile_img} width={50} height={50} />
             )
-        }
+        },
+        {
+            field: 'action',
+            headerName: 'ACTION',
+            width: 400,
+            renderCell: (params) => (
+                <>
+                    <IconButton aria-label="delete" onClick={() => { handledClickOpen(); setDid(params.id) }}>
+                        <DeleteIcon />
+                    </IconButton>
+                    <IconButton aria-label="edit" onClick={() => { handleEdit(params) }}>
+                        <EditIcon />
+                    </IconButton>
+                </>
+            )
+        },
+        
     ];
 
     // Table Rows
@@ -78,7 +153,7 @@ export default function Category() {
 
     return (
         <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Button variant="outlined" onClick={() => handleClickOpen()}>
                 Add Category
             </Button>
 
@@ -91,6 +166,21 @@ export default function Category() {
                     checkboxSelection
                 />
             </div>
+
+            <Dialog
+                open={dopen}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handledClose}
+                fullWidth
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle>{"Are you sure to delete?"}</DialogTitle>
+                <DialogActions>
+                    <Button onClick={handledClose}>NO</Button>
+                    <Button onClick={() => handleDelete()}>YES</Button>
+                </DialogActions>
+            </Dialog>
 
             <Dialog fullWidth open={open} onClose={handleClose}>
                 <DialogTitle>Add Category</DialogTitle>

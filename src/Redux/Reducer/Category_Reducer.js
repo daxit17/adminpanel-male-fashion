@@ -26,6 +26,27 @@ export const CategoryReducer = (state = initVal, action) => {
                 error: ''
             }
 
+        case ActionTypes.DELETE_CATEGORY_DATA:
+            return {
+                ...state,
+                isLoading: false,
+                category: state.category.filter((l) => l.id !== action.payload),
+                eerror: ''
+            }
+
+        case ActionTypes.UPDATE_CATEGORY_DATA:
+            return {
+                ...state,
+                isLoading: false,
+                category: state.category.map((v) => {
+                    if (v.id === action.payload.id) {
+                        return action.payload;
+                    } else {
+                        return v;
+                    }
+                })
+            }
+
         default:
             return state;
     }
