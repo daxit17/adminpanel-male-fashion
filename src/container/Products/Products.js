@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from "react-redux";
-import { AddProductsData, GetProductsData, ProductsActions } from '../../Redux/Actions/Product_Actions';
+import { AddProductsData, DeleteProductsData, GetProductsData, ProductsActions, UpdateProductsData } from '../../Redux/Actions/Product_Actions';
 
 export default function Products() {
     const [open, setOpen] = React.useState(false);
@@ -42,7 +42,6 @@ export default function Products() {
     };
 
     const products = useSelector(state => state.products)
-
 
     // schema (Yup)
 
@@ -82,12 +81,12 @@ export default function Products() {
 
         // let localData = JSON.parse(localStorage.getItem("products"));
 
-        let id = Math.floor(Math.random() * 1000);
+        // let id = Math.floor(Math.random() * 1000);
 
-        let data = {
-            id: id,
-            ...values
-        }
+        // let data = {
+        //     id: id,
+        //     ...values
+        // }
 
         // if (localData === null) {
         //     localStorage.setItem("products", JSON.stringify([data]));
@@ -96,7 +95,7 @@ export default function Products() {
         //     localStorage.setItem("products", JSON.stringify(localData));
         // }
 
-        dispatch(AddProductsData(data));
+        dispatch(AddProductsData(values));
 
         LoadData();
         handleClose();
@@ -147,11 +146,14 @@ export default function Products() {
     // handleDelete
 
     const handleDelete = () => {
-        let localData = JSON.parse(localStorage.getItem("products"));
 
-        let fData = localData.filter((l) => l.id !== did);
+        // let localData = JSON.parse(localStorage.getItem("products"));
 
-        localStorage.setItem("products", JSON.stringify(fData));
+        // let fData = localData.filter((l) => l.id !== did);
+
+        // localStorage.setItem("products", JSON.stringify(fData));
+
+        dispatch(DeleteProductsData(did));
 
         handleDClose();
         LoadData();
@@ -176,17 +178,21 @@ export default function Products() {
     // updatedata
 
     const updatedata = (values) => {
-        const upddata = JSON.parse(localStorage.getItem("products"))
 
-        const newdata = upddata.map((m) => {
-            if (m.id === values.id) {
-                return values;
-            } else {
-                return m;
-            }
-        });
 
-        localStorage.setItem("products", JSON.stringify(newdata));
+        // const upddata = JSON.parse(localStorage.getItem("products"))
+
+        // const newdata = upddata.map((m) => {
+        //     if (m.id === values.id) {
+        //         return values;
+        //     } else {
+        //         return m;
+        //     }
+        // });
+
+        // localStorage.setItem("products", JSON.stringify(newdata));
+
+        dispatch(UpdateProductsData(values))
 
         handleClose();
         localdata();
